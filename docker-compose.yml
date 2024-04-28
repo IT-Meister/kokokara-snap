@@ -1,0 +1,46 @@
+services:
+  service_postgres:
+    image: postgres:15.6
+    container_name: im-postgres-container
+    platform: linux/x86_64
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_PASSWORD: im-pass
+      POSTGRES_USER: im-user
+      POSTGRES_DB: im-db
+    volumes:
+      - im-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U im-user -d im-db"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - im-network
+
+  service_pdadmin4:
+    image: dpage/pgadmin4:8.5
+    container_name: im-pdadmin4-container
+    platform: linux/x86_64
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@itmeister.com
+      PGADMIN_DEFAULT_PASSWORD: im-pass
+    volumes:
+      - im-pdadmin4-data:/var/lib/pgadmin
+    ports:
+      - '8080:80'
+    depends_on:
+      service_postgres:
+        condition: service_healthy
+    networks:
+      - im-network
+
+volumes:
+  im-postgres-data:
+  im-pdadmin4-data:
+
+networks:
+  im-network:
+    driver: bridge

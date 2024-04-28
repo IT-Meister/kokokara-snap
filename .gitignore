@@ -1,0 +1,16 @@
+# common
+# virtual environment
+.tool-versions
+
+# for the IDE
+.vscode/
+.idea/
+
+# for the macbook
+# misc
+.DS_Store
+
+
+
+# backend
+#
