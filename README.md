@@ -6,6 +6,6 @@
 $ docker compose up --build
 ```
 
-
 ### versions for tools
- - Java 17.0.9
+
+- Java 17.0.9
