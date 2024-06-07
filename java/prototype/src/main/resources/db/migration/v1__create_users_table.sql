@@ -1,6 +1,6 @@
 CREATE TABLE `users` (
     `user_id` SERIAL NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `user_name` VARCHAR(50) NOT NULL UNIQUE,
+    `user_name` VARCHAR(25) NOT NULL UNIQUE,
     `password` VARCHAR(255) NOT NULL,
     `email` VARCHAR(255) NOT NULL,
     `last_login_time` TIMESTAMP,
