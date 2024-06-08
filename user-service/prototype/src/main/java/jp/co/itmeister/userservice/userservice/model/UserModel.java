@@ -14,15 +14,14 @@ import java.util.Date;
 public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long user_id;
+    private Long userId;
 
     @NotBlank
-    @Column(unique = true)
+    @Column(name = "user_name" , unique = true)
     @Size(min = 5 , max = 25)
-    private String user_name;
+    private String userName;
 
     @NotBlank
-    @Column(nullable = false)
     private String password;
 
     @Email
@@ -30,12 +29,48 @@ public class UserModel {
     @Size(max = 255)
     private String email;
 
-    private Date last_login_time;
+    @Column(name = "last_login_time")
+    private Date lastLoginTime;
 
     @CreatedDate
-    private Date created_at;
+    @Column(name = "created_at" , updatable = false)
+    private Date createdAt;
 
+    @Column(name = "updated_at")
     @LastModifiedDate
-    private Date updated_at;
+    private Date updatedAt;
+
+    // getter & setter
+    public Long getUserId () {
+        return this.userId = this.userId;
+    }
+
+    public void setUserId (Long userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName () {
+        return this.userName;
+    }
+
+    public void setUserName (String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword () {
+        return this.password;
+    }
+
+    public void setPassword (String password) {
+        this.password = password;
+    }
+
+    public String getEmail () {
+        return this.email;
+    }
+
+    public void setEmail (String email) {
+        this.email = email;
+    }
 
 }
