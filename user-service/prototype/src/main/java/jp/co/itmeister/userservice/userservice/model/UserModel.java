@@ -6,11 +6,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 
 @Entity
 @Table(name="users")
+@EntityListeners(AuditingEntityListener.class)
 public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,4 +75,38 @@ public class UserModel {
         this.email = email;
     }
 
+    public Date getLastLoginTime () {
+        return this.lastLoginTime;
+    }
+
+    public void setLastLoginTime (Date lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+    }
+
+    public Date getCreatedAt () {
+        return this.createdAt;
+    }
+
+    public void setCreatedAt (Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt () {
+        return this.updatedAt;
+    }
+
+    public void setUpdatedAt (Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new Date();
+        updatedAt = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = new Date();
+    }
 }
