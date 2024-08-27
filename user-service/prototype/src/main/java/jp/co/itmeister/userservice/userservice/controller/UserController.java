@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import jp.co.itmeister.userservice.userservice.entity.UserEntity;
 import jp.co.itmeister.userservice.userservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
