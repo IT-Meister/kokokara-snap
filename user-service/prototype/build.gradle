@@ -28,3 +28,11 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+flyway {
+    url = 'jdbc:postgresql://localhost:5433/im-db'
+    user = 'im-user'
+    password = 'im-pass'
+    locations = ['classpath:db/migration']
+    cleanDisabled = false
+    }
