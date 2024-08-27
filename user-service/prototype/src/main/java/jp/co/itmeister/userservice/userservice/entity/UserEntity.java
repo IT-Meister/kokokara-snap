@@ -1,4 +1,4 @@
-package jp.co.itmeister.userservice.userservice.model;
+package jp.co.itmeister.userservice.userservice.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -13,7 +13,7 @@ import java.util.Date;
 @Entity
 @Table(name="users")
 @EntityListeners(AuditingEntityListener.class)
-public class UserModel {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
@@ -44,7 +44,7 @@ public class UserModel {
 
     // getter & setter
     public Long getUserId () {
-        return this.userId = this.userId;
+        return this.userId;
     }
 
     public void setUserId (Long userId) {

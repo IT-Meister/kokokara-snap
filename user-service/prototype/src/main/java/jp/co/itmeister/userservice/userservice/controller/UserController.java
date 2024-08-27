@@ -1,7 +1,7 @@
 package jp.co.itmeister.userservice.userservice.controller;
 
 import jakarta.validation.Valid;
-import jp.co.itmeister.userservice.userservice.model.UserModel;
+import jp.co.itmeister.userservice.userservice.entity.UserEntity;
 import jp.co.itmeister.userservice.userservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping
-    public UserModel createUser (@Valid @RequestBody UserModel user) {
+    public UserEntity createUser (@Valid @RequestBody UserEntity user) {
         return userService.createUser(user);
     }
 
