@@ -1,9 +1,11 @@
+-- uuidを有効化
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- postgisを有効化
 CREATE EXTENSION IF NOT EXISTS postgis;
 
 CREATE TABLE posts (
     id SERIAL PRIMARY KEY,
-    uid VARCHAR(255) NOT NULL,
+    uid UUID NOT NULL DEFAULT uuid_generate_v4(),
     user_id INTEGER NOT NULL,
     url VARCHAR(255) NOT NULL,
     title VARCHAR(128) NOT NULL,
