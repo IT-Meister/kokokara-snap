@@ -19,7 +19,8 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
-    public Optional<PostEntity> showPost (Long id) {
-        return postRepository.findById(id);
-    }
+    public PostEntity showPost (Long id) {
+        Optional<PostEntity> post =  postRepository.findById(id);
+         return post.orElseThrow();
+    }    
 }
