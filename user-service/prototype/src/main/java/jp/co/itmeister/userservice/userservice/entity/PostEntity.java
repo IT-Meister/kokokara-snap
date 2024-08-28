@@ -2,7 +2,7 @@ package jp.co.itmeister.userservice.userservice.entity;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
+import java.math.BigDecimal;
 
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
@@ -50,7 +50,7 @@ public class PostEntity {
     private String iso;
 
     @Column(name = "f_value", precision = 5, scale = 2)
-    private Float fValue;
+    private BigDecimal fValue;
 
     @Column(name = "shutter_speed", length = 32)
     private String shutterSpeed;
@@ -161,11 +161,11 @@ public class PostEntity {
         this.iso = iso;
     }
 
-    public Float getFValue() {
+    public BigDecimal getFValue() {
         return fValue;
     }
 
-    public void setFValue(Float fValue) {
+    public void setFValue(BigDecimal fValue) {
         this.fValue = fValue;
     }
 
