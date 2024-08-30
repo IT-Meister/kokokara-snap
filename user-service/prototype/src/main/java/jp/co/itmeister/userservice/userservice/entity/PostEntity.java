@@ -3,6 +3,8 @@ package jp.co.itmeister.userservice.userservice.entity;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
+import org.locationtech.jts.geom.Point;
+import org.hibernate.annotations.Type;
 
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
@@ -37,8 +39,8 @@ public class PostEntity {
     @Column(name = "camera_id", nullable = false)
     private Integer cameraId;
 
-    @Column(name = "latlng", nullable = false)
-    private String latlng;  // PostGISのGEOGRAPHY型はカスタムデシリアライズが必要
+    @Column(name = "latlng", nullable = false , columnDefinition =  "geography(Point,4326)")
+    private Point latlng;  
 
     @Column(name = "snap_time")
     private ZonedDateTime snapTime;
@@ -129,11 +131,11 @@ public class PostEntity {
         this.cameraId = cameraId;
     }
 
-    public String getLatlng() {
+    public Point getLatlng() {
         return latlng;
     }
 
-    public void setLatlng(String latlng) {
+    public void setLatlng(Point latlng) {
         this.latlng = latlng;
     }
 

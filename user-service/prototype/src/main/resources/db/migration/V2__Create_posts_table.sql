@@ -12,7 +12,7 @@ CREATE TABLE posts (
     city_id INTEGER,
     description VARCHAR(255),
     camera_id INTEGER NOT NULL,
-    latlng GEOGRAPHY NOT NULL,
+    latlng GEOGRAPHY(Point, 4326) NOT NULL,
     snap_time TIMESTAMPTZ, 
     angle INTEGER,
     iso VARCHAR(32),
