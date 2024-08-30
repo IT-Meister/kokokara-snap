@@ -1,6 +1,7 @@
 services:
   service_postgres:
-    image: postgres:15.6
+    # image: postgres:15.6
+    image: postgis/postgis:15-3.3
     container_name: im-postgres-container
     platform: linux/x86_64
     ports:
@@ -30,7 +31,7 @@ services:
     volumes:
       - im-pdadmin4-data:/var/lib/pgadmin
     ports:
-      - '8081:80'
+      - "8081:80"
     depends_on:
       service_postgres:
         condition: service_healthy
