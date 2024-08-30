@@ -4,9 +4,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import org.locationtech.jts.geom.Point;
-import org.hibernate.annotations.Type;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.persistence.*;
+import jp.co.itmeister.userservice.userservice.custom.PointSerializer;
+
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -39,6 +41,7 @@ public class PostEntity {
     @Column(name = "camera_id", nullable = false)
     private Integer cameraId;
 
+    @JsonSerialize(using = PointSerializer.class)
     @Column(name = "latlng", nullable = false , columnDefinition =  "geography(Point,4326)")
     private Point latlng;  
 
