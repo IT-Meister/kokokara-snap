@@ -7,7 +7,7 @@ CREATE TABLE posts (
     id SERIAL PRIMARY KEY,
     uid UUID NOT NULL DEFAULT uuid_generate_v4(),
     user_id INTEGER NOT NULL,
-    url VARCHAR(255) NOT NULL,
+    url VARCHAR(512) NOT NULL,
     title VARCHAR(128) NOT NULL,
     city_id INTEGER,
     description VARCHAR(255),
