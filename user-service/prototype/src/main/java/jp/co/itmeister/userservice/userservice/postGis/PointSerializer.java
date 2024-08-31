@@ -1,4 +1,4 @@
-package jp.co.itmeister.userservice.userservice.custom;
+package jp.co.itmeister.userservice.userservice.postGis;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
