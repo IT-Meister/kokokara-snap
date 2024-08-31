@@ -4,6 +4,7 @@ import jp.co.itmeister.userservice.userservice.entity.UserEntity;
 import jp.co.itmeister.userservice.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -13,6 +14,11 @@ public class UserService {
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    public UserEntity showUser (Long id ) {
+        Optional<UserEntity> user = userRepository.findById(id);
+        return user.orElseThrow();
     }
 
     public UserEntity createUser(UserEntity user) {
