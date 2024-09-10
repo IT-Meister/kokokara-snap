@@ -7,7 +7,7 @@ import org.locationtech.jts.geom.Point;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.persistence.*;
-import jp.co.itmeister.userservice.userservice.custom.PointSerializer;
+import jp.co.itmeister.userservice.userservice.postGis.PointSerializer;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;

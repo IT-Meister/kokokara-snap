@@ -2,13 +2,13 @@ package jp.co.itmeister.userservice.userservice.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.Date;
+import jakarta.validation.constraints.NotEmpty;
+
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name="users")
@@ -16,97 +16,74 @@ import java.util.Date;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long id;
 
-    @NotBlank
-    @Column(name = "user_name" , unique = true)
-    @Size(min = 5 , max = 25)
+    @NotEmpty(message = "Display name is required")
+    @Column(name = "display_name", nullable = false, length = 64)
+    private String displayName;
+
+    @NotEmpty(message = "User name is required")
+    @Column(name = "user_name", nullable = false, length = 128, unique = true)
     private String userName;
 
-    @NotBlank
-    private String password;
-
-    @Email
-    @NotBlank
-    @Size(max = 255)
+    @Email(message = "Email should be valid")
+    @NotEmpty(message = "Email is required")
+    @Column(name = "email", nullable = false, length = 255, unique = true)
     private String email;
 
-    @Column(name = "last_login_time")
-    private Date lastLoginTime;
+    @NotEmpty(message = "Password is required")
+    @Column(name = "password", nullable = false, length = 255)
+    private String password;
 
-    @CreatedDate
-    @Column(name = "created_at" , updatable = false)
-    private Date createdAt;
+    @Column(name = "prefecture", nullable = false)
+    private Short prefecture;
 
-    @Column(name = "updated_at")
-    @LastModifiedDate
-    private Date updatedAt;
-
-    // getter & setter
-    public Long getUserId () {
-        return this.userId;
+    // Getter & Setter for all fields
+    public Long getId() {
+        return id;
     }
 
-    public void setUserId (Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getUserName () {
-        return this.userName;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setUserName (String userName) {
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
         this.userName = userName;
     }
 
-    public String getPassword () {
-        return this.password;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPassword (String password) {
-        this.password = password;
-    }
-
-    public String getEmail () {
-        return this.email;
-    }
-
-    public void setEmail (String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public Date getLastLoginTime () {
-        return this.lastLoginTime;
+    public String getPassword() {
+        return password;
     }
 
-    public void setLastLoginTime (Date lastLoginTime) {
-        this.lastLoginTime = lastLoginTime;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public Date getCreatedAt () {
-        return this.createdAt;
+    public Short getPrefecture() {
+        return prefecture;
     }
 
-    public void setCreatedAt (Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt () {
-        return this.updatedAt;
-    }
-
-    public void setUpdatedAt (Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = new Date();
-        updatedAt = new Date();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = new Date();
+    public void setPrefecture(Short prefecture) {
+        this.prefecture = prefecture;
     }
 }
