@@ -6,6 +6,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import jakarta.validation.constraints.NotEmpty;
+
 import java.time.ZonedDateTime;
 
 @Entity
@@ -16,98 +18,72 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty(message = "Display name is required")
     @Column(name = "display_name", nullable = false, length = 64)
     private String displayName;
 
+    @NotEmpty(message = "User name is required")
     @Column(name = "user_name", nullable = false, length = 128, unique = true)
     private String userName;
 
-    @Email
+    @Email(message = "Email should be valid")
+    @NotEmpty(message = "Email is required")
     @Column(name = "email", nullable = false, length = 255, unique = true)
     private String email;
 
+    @NotEmpty(message = "Password is required")
     @Column(name = "password", nullable = false, length = 255)
     private String password;
 
     @Column(name = "prefecture", nullable = false)
     private Short prefecture;
 
-    @Column(name = "last_login_time")
-    private ZonedDateTime lastLoginTime;
+    // Getter & Setter for all fields
+    public Long getId() {
+        return id;
+    }
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private ZonedDateTime createdAt;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private ZonedDateTime updatedAt;
-    
-    // getter & setter
-    // public Long getUserId () {
-    //     return this.userId;
-    // }
+    public String getDisplayName() {
+        return displayName;
+    }
 
-    // public void setUserId (Long userId) {
-    //     this.userId = userId;
-    // }
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 
-    // public String getUserName () {
-    //     return this.userName;
-    // }
+    public String getUserName() {
+        return userName;
+    }
 
-    // public void setUserName (String userName) {
-    //     this.userName = userName;
-    // }
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-    // public String getPassword () {
-    //     return this.password;
-    // }
+    public String getEmail() {
+        return email;
+    }
 
-    // public void setPassword (String password) {
-    //     this.password = password;
-    // }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    // public String getEmail () {
-    //     return this.email;
-    // }
+    public String getPassword() {
+        return password;
+    }
 
-    // public void setEmail (String email) {
-    //     this.email = email;
-    // }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-    // public Date getLastLoginTime () {
-    //     return this.lastLoginTime;
-    // }
+    public Short getPrefecture() {
+        return prefecture;
+    }
 
-    // public void setLastLoginTime (Date lastLoginTime) {
-    //     this.lastLoginTime = lastLoginTime;
-    // }
-
-    // public Date getCreatedAt () {
-    //     return this.createdAt;
-    // }
-
-    // public void setCreatedAt (Date createdAt) {
-    //     this.createdAt = createdAt;
-    // }
-
-    // public Date getUpdatedAt () {
-    //     return this.updatedAt;
-    // }
-
-    // public void setUpdatedAt (Date updatedAt) {
-    //     this.updatedAt = updatedAt;
-    // }
-
-    // @PrePersist
-    // protected void onCreate() {
-    //     createdAt = new Date();
-    //     updatedAt = new Date();
-    // }
-
-    // @PreUpdate
-    // protected void onUpdate() {
-    //     updatedAt = new Date();
-    // }
+    public void setPrefecture(Short prefecture) {
+        this.prefecture = prefecture;
+    }
 }
