@@ -35,8 +35,9 @@ public class UserEntity {
     @Column(name = "password", nullable = false, length = 255)
     private String password;
 
-    @Column(name = "prefecture", nullable = false)
-    private Short prefecture;
+    @ManyToOne
+    @JoinColumn(name = "prefecture", referencedColumnName = "id")
+    private PrefectureEntity prefecture;
 
     // Getter & Setter for all fields
     public Long getId() {
@@ -79,11 +80,11 @@ public class UserEntity {
         this.password = password;
     }
 
-    public Short getPrefecture() {
+    public PrefectureEntity getPrefecture() {
         return prefecture;
     }
 
-    public void setPrefecture(Short prefecture) {
+    public void setPrefecture(PrefectureEntity prefecture) {
         this.prefecture = prefecture;
     }
 }
