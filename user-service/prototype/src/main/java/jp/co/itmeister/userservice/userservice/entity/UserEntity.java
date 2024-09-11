@@ -2,13 +2,9 @@ package jp.co.itmeister.userservice.userservice.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import jakarta.validation.constraints.NotEmpty;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.ZonedDateTime;
 
 @Entity
 @Table(name="users")
