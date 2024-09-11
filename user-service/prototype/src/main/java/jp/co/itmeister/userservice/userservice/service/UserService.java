@@ -8,14 +8,18 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository , PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -26,4 +30,18 @@ public UserEntity showUser(Long id) {
     public UserEntity createUser(UserEntity user) {
         return userRepository.save(user);
     }
+
+    public boolean authenticateUser(String email, String password) {
+        // ユーザーをユーザー名で検索
+        Optional<UserEntity> userOpt = userRepository.findByEmail(email);
+
+        if (userOpt.isPresent()) {
+            UserEntity user = userOpt.get();
+            // パスワードを比較（ハッシュ化されたパスワードと入力されたパスワード）
+            return passwordEncoder.matches(password, user.getPassword());
+        }
+
+        return false;
+    }
+
 }
