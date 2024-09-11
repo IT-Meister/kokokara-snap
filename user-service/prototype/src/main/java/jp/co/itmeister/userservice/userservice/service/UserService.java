@@ -31,17 +31,18 @@ public UserEntity showUser(Long id) {
         return userRepository.save(user);
     }
 
-    public boolean authenticateUser(String email, String password) {
-        // ユーザーをユーザー名で検索
+   public Optional<UserEntity> authenticateUser(String email, String password) {
+        // ユーザーをメールアドレスで検索
         Optional<UserEntity> userOpt = userRepository.findByEmail(email);
 
         if (userOpt.isPresent()) {
             UserEntity user = userOpt.get();
             // パスワードを比較（ハッシュ化されたパスワードと入力されたパスワード）
-            return passwordEncoder.matches(password, user.getPassword());
+            if (passwordEncoder.matches(password, user.getPassword())) {
+                return Optional.of(user);  // 認証成功
+            }
         }
-
-        return false;
+        return Optional.empty();  // 認証失敗
     }
 
 }
