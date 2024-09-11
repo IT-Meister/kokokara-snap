@@ -5,6 +5,7 @@ import jp.co.itmeister.userservice.userservice.responseBuilder.ResponseBuilder;
 import jp.co.itmeister.userservice.userservice.service.PostService;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,12 @@ public class PostController {
 
     @GetMapping("/{post_id}")
     public ResponseEntity<Map<String, Object>> showPost(@PathVariable("post_id") Long id) {
-            PostEntity post = postService.showPost(id);
-            return responseBuilder.buildSuccessResponse(post);
+            Optional<PostEntity> post = postService.showPost(id);
+
+            if(post.isPresent()){
+                return responseBuilder.buildSuccessResponse(post.get());
+            } else {
+                return responseBuilder.buildErrorResponse("Post not found.", HttpStatus.NOT_FOUND);
+            }
     }
 }
