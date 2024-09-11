@@ -23,7 +23,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final CityRepository cityRepository;
 
-    private static final int MAX_POSTS = 2;
+    private static final int MAX_POSTS = 60;
 
     @Autowired
     public PostService(PostRepository postRepository, CityRepository cityRepository) {
