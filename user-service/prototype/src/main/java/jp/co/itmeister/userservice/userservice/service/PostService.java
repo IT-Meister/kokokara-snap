@@ -7,7 +7,6 @@ import jp.co.itmeister.userservice.userservice.repository.CityRepository;
 
 import java.util.Optional;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class PostService {
     public List<PostEntity> findByPrefecture(Integer prefectureId) {
         List<CityEntity> cities = cityRepository.findByPrefectureId(prefectureId);
         if(cities.isEmpty()) {
-            return new ArrayList<>();
+            return postRepository.findAll();
         }
        List<Integer> cityIds = cities.stream().map(CityEntity::getId).collect(Collectors.toList());
         return postRepository.findByCityIdIn(cityIds);
