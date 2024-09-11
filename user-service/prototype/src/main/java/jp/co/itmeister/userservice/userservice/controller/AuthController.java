@@ -24,7 +24,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authLogin(@Valid @RequestBody UserEntity user) {
-        boolean isAuthenticated = userService.authenticateUser(user.getUserName(), user.getPassword());
+        boolean isAuthenticated = userService.authenticateUser(user.getEmail(), user.getPassword());
 
         if(isAuthenticated) {
             return ResponseEntity.ok().body("Login successful.");
