@@ -50,7 +50,7 @@ public class PostController {
             if(post.isPresent()){
                 return responseBuilder.buildSuccessResponse(post.get());
             } else {
-                return responseBuilder.buildErrorResponse("Post not found.", HttpStatus.NOT_FOUND);
+                return responseBuilder.buildErrorResponse("Post was not found.", HttpStatus.NOT_FOUND);
             }
     }
 }

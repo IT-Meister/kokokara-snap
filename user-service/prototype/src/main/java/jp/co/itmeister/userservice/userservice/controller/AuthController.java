@@ -51,7 +51,7 @@ public class AuthController {
         } catch (IllegalArgumentException e) {
             return responseBuilder.buildErrorResponse(e.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {
-            return responseBuilder.buildErrorResponse("ユーザー登録に失敗しました", HttpStatus.INTERNAL_SERVER_ERROR);
+            return responseBuilder.buildErrorResponse("User registration failed.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

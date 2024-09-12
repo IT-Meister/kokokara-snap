@@ -30,7 +30,7 @@ public class UserController {
         if(userOptional.isPresent()) {
             return responseBuilder.buildSuccessResponse(userOptional.get());
         } else {
-            return responseBuilder.buildErrorResponse("User not found", HttpStatus.NOT_FOUND);
+            return responseBuilder.buildErrorResponse("User was not found.", HttpStatus.NOT_FOUND);
         }
     }
 
