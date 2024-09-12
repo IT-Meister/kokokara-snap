@@ -7,13 +7,16 @@ import java.util.LinkedHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import jp.co.itmeister.userservice.userservice.dto.UserResponseDto;
 import jp.co.itmeister.userservice.userservice.entity.UserEntity;
+import jp.co.itmeister.userservice.userservice.responseBuilder.ResponseBuilder;
 import jp.co.itmeister.userservice.userservice.service.UserService;
 
 
@@ -21,10 +24,12 @@ import jp.co.itmeister.userservice.userservice.service.UserService;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
     private final UserService  userService;
+    private final ResponseBuilder responseBuilder;
 
     @Autowired
-    public AuthController (UserService userService) {
+    public AuthController (UserService userService , ResponseBuilder responseBuilder) {
         this.userService = userService;
+        this.responseBuilder = responseBuilder;
     }
 
     @PostMapping("/login")
@@ -52,6 +57,20 @@ public class AuthController {
             responseData.put("data", "Invalid email or password");
             
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseData);
+        }
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<Map<String, Object>> signup(@Valid @RequestBody UserEntity signupRequest) {
+        try {
+            UserEntity signedUpUser = userService.signupUser(signupRequest);
+            UserResponseDto response = new UserResponseDto(signedUpUser);
+            
+            return responseBuilder.buildSuccessResponse(response);
+        } catch (IllegalArgumentException e) {
+            return responseBuilder.buildErrorResponse(e.getMessage(), HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            return responseBuilder.buildErrorResponse("ユーザー登録に失敗しました", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
