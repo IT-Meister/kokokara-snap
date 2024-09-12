@@ -32,7 +32,7 @@ public class PostService {
     }
 
     //全件取得 (Max MAX_POSTS件)
-    public List<PostEntity> findAllPosts() {
+    public List<PostEntity> findRecentPosts() {
         return findPostsWithLimit(MAX_POSTS);
     }
 
@@ -46,14 +46,16 @@ public class PostService {
             return findPostsWithLimit(MAX_POSTS);
         }
 
-        //取得したcitiy_id
+        //取得したcity_id
        List<Integer> cityIds = cities.stream().map(CityEntity::getId).collect(Collectors.toList());
         posts = postRepository.findByCityIdIn(cityIds);
 
         //MAX_POSTS件未満なので補完する
         if (posts.size() < MAX_POSTS) {
-            Pageable pageable = PageRequest.of(0, MAX_POSTS - posts.size(), Sort.by("id").ascending());
-            List<PostEntity> additionalPosts = postRepository.findAll(pageable).getContent();
+            Pageable pageable = PageRequest.of(0, MAX_POSTS - posts.size(), Sort.by("id").descending());
+
+            List<Long> currentPostIds = posts.stream().map(PostEntity::getId).collect(Collectors.toList());
+            List<PostEntity> additionalPosts = postRepository.findByIdNotIn(currentPostIds, pageable);
             posts.addAll(additionalPosts);
         }
 
@@ -67,7 +69,7 @@ public class PostService {
 
     //件数制限をかける取得メソッド
     private List<PostEntity> findPostsWithLimit(int limit ) {
-        Pageable pageable = PageRequest.of(0, limit, Sort.by("id").ascending());
+        Pageable pageable = PageRequest.of(0, limit, Sort.by("id").descending());
         return postRepository.findAll(pageable).getContent();
     }
 }

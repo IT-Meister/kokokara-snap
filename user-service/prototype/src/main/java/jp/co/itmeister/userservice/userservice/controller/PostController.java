@@ -37,7 +37,7 @@ public class PostController {
             posts = postService.findByPrefecture(prefecture);
         } else {
             // 都道府県指定なし
-            posts = postService.findAllPosts();
+            posts = postService.findRecentPosts();
         }
         return ResponseEntity.ok(posts);
     }
