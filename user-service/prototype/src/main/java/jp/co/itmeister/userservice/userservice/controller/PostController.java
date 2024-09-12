@@ -30,8 +30,8 @@ public class PostController {
         this.responseBuilder = responseBuilder;
     }
 
-    @GetMapping
-    public ResponseEntity<List<PostEntity>> indexPost(@RequestParam(value = "prefecture", required = false) Integer prefecture) {
+    @GetMapping("/home")
+    public ResponseEntity<Map<String , Object>> indexPost(@RequestParam(value = "prefecture", required = false) Integer prefecture) {
         List<PostEntity> posts;
         if (prefecture != null) {
             // 都道府県指定あり
@@ -40,7 +40,7 @@ public class PostController {
             // 都道府県指定なし
             posts = postService.findRecentPosts();
         }
-        return ResponseEntity.ok(posts);
+        return responseBuilder.buildSuccessResponse(posts);
     }
 
     @GetMapping("/{post_id}")
