@@ -14,16 +14,13 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = "Display name is required")
     @Column(name = "display_name", nullable = false, length = 64)
     private String displayName;
 
-    @NotEmpty(message = "User name is required")
     @Column(name = "user_name", nullable = false, length = 128, unique = true)
     private String userName;
 
     @Email(message = "Email should be valid")
-    @NotEmpty(message = "Email is required")
     @Column(name = "email", nullable = false, length = 255, unique = true)
     private String email;
 
