@@ -3,12 +3,9 @@ package jp.co.itmeister.userservice.userservice.service;
 import jp.co.itmeister.userservice.userservice.dto.UserResponseDto;
 import jp.co.itmeister.userservice.userservice.entity.UserEntity;
 import jp.co.itmeister.userservice.userservice.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
-import org.springframework.stereotype.Service;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
@@ -25,26 +22,26 @@ public class UserService {
     }
 
 
-public UserEntity showUser(Long id) {
-    return userRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-}
+    public Optional<UserEntity> showUser(Long id)  {
+
+        return userRepository.findById(id);
+    }
+
     public UserEntity createUser(UserEntity user) {
         return userRepository.save(user);
     }
 
-   public Optional<UserEntity> authenticateUser(String email, String password) {
+   public UserResponseDto authenticateUser(String email, String password) {
         // ユーザーをメールアドレスで検索
-        Optional<UserEntity> userOpt = userRepository.findByEmail(email);
+        UserEntity user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException());
 
-        if (userOpt.isPresent()) {
-            UserEntity user = userOpt.get();
             // パスワードを比較（ハッシュ化されたパスワードと入力されたパスワード）
-            if (passwordEncoder.matches(password, user.getPassword())) {
-                return Optional.of(user);  // 認証成功
+            if (!passwordEncoder.matches(password, user.getPassword())) {
+                throw new IllegalArgumentException();
             }
-        }
-        return Optional.empty();  // 認証失敗
+
+            return new UserResponseDto(user);
+
     }
 
     public UserResponseDto signupUser (UserEntity signupRequestUser) throws Exception {
@@ -58,8 +55,6 @@ public UserEntity showUser(Long id) {
         if(userRepository.findByEmail(signupRequestUser.getEmail()).isPresent()) {
             throw new IllegalArgumentException("This email is already exists.");
         }
-
-
 
         //パスワードをハッシュ化
         signupRequestUser.setPassword(passwordEncoder.encode(signupRequestUser.getPassword()));
