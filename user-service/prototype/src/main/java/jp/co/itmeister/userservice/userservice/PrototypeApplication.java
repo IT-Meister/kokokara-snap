@@ -41,7 +41,7 @@ public class PrototypeApplication {
                     .allowedOrigins("*")
                     .allowedMethods("GET", "POST", "PUT", "DELETE")
                     .allowedHeaders("*")
-                    .allowCredentials(true)
+                    .allowCredentials(false)
                     .maxAge(3600);
             }
         };
