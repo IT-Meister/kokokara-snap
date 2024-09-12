@@ -3,10 +3,9 @@ package jp.co.itmeister.userservice.userservice.service;
 import jp.co.itmeister.userservice.userservice.dto.UserResponseDto;
 import jp.co.itmeister.userservice.userservice.entity.UserEntity;
 import jp.co.itmeister.userservice.userservice.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
@@ -24,10 +23,11 @@ public class UserService {
     }
 
 
-public UserEntity showUser(Long id) {
-    return userRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-}
+    public Optional<UserEntity> showUser(Long id)  {
+
+        return userRepository.findById(id);
+    }
+
     public UserEntity createUser(UserEntity user) {
         return userRepository.save(user);
     }
