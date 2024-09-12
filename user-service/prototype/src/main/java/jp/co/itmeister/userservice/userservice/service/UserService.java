@@ -6,7 +6,6 @@ import jp.co.itmeister.userservice.userservice.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
@@ -32,18 +31,17 @@ public class UserService {
         return userRepository.save(user);
     }
 
-   public Optional<UserEntity> authenticateUser(String email, String password) {
+   public UserResponseDto authenticateUser(String email, String password) {
         // ユーザーをメールアドレスで検索
-        Optional<UserEntity> userOpt = userRepository.findByEmail(email);
+        UserEntity user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException());
 
-        if (userOpt.isPresent()) {
-            UserEntity user = userOpt.get();
             // パスワードを比較（ハッシュ化されたパスワードと入力されたパスワード）
-            if (passwordEncoder.matches(password, user.getPassword())) {
-                return Optional.of(user);  // 認証成功
+            if (!passwordEncoder.matches(password, user.getPassword())) {
+                throw new IllegalArgumentException();
             }
-        }
-        return Optional.empty();  // 認証失敗
+
+            return new UserResponseDto(user);
+
     }
 
     public UserResponseDto signupUser (UserEntity signupRequestUser) throws Exception {
@@ -57,8 +55,6 @@ public class UserService {
         if(userRepository.findByEmail(signupRequestUser.getEmail()).isPresent()) {
             throw new IllegalArgumentException("This email is already exists.");
         }
-
-
 
         //パスワードをハッシュ化
         signupRequestUser.setPassword(passwordEncoder.encode(signupRequestUser.getPassword()));
