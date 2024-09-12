@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import java.util.Optional;
 
 @Service
 public class UserService {
