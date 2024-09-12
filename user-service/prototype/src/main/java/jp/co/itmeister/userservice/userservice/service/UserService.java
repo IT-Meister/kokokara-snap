@@ -1,8 +1,10 @@
 package jp.co.itmeister.userservice.userservice.service;
 
+import jp.co.itmeister.userservice.userservice.dto.UserResponseDto;
 import jp.co.itmeister.userservice.userservice.entity.UserEntity;
 import jp.co.itmeister.userservice.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
@@ -45,7 +47,7 @@ public UserEntity showUser(Long id) {
         return Optional.empty();  // 認証失敗
     }
 
-    public UserEntity signupUser (UserEntity signupRequestUser) throws Exception {
+    public UserResponseDto signupUser (UserEntity signupRequestUser) throws Exception {
 
         //すでに登録済み user_name
         if(userRepository.findByUserName(signupRequestUser.getUserName()).isPresent()) {
@@ -61,8 +63,10 @@ public UserEntity showUser(Long id) {
 
         //パスワードをハッシュ化
         signupRequestUser.setPassword(passwordEncoder.encode(signupRequestUser.getPassword()));
+        UserEntity signupedUser = userRepository.save(signupRequestUser);
+        UserResponseDto response = new UserResponseDto(signupedUser);
 
-        return userRepository.save(signupRequestUser);
+        return response;
     }
 
 }

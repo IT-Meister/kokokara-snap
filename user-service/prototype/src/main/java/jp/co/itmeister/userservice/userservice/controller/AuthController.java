@@ -63,10 +63,9 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<Map<String, Object>> signup(@Valid @RequestBody UserEntity signupRequest) {
         try {
-            UserEntity signedUpUser = userService.signupUser(signupRequest);
-            UserResponseDto response = new UserResponseDto(signedUpUser);
+            UserResponseDto signedUpUser = userService.signupUser(signupRequest);
             
-            return responseBuilder.buildSuccessResponse(response);
+            return responseBuilder.buildSuccessResponse(signedUpUser);
         } catch (IllegalArgumentException e) {
             return responseBuilder.buildErrorResponse(e.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {
