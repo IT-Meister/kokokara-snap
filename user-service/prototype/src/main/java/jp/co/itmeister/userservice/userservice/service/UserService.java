@@ -45,4 +45,24 @@ public UserEntity showUser(Long id) {
         return Optional.empty();  // 認証失敗
     }
 
+    public UserEntity signupUser (UserEntity signupRequestUser) throws Exception {
+
+        //すでに登録済み user_name
+        if(userRepository.findByUserName(signupRequestUser.getUserName()).isPresent()) {
+            throw new IllegalArgumentException("This user name is already exists.");
+        }
+
+        //すでに登録済み メアド
+        if(userRepository.findByEmail(signupRequestUser.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("This email is already exists.");
+        }
+
+
+
+        //パスワードをハッシュ化
+        signupRequestUser.setPassword(passwordEncoder.encode(signupRequestUser.getPassword()));
+
+        return userRepository.save(signupRequestUser);
+    }
+
 }
