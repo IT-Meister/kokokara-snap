@@ -5,13 +5,13 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- サンプルユーザーデータの挿入
-INSERT INTO users (display_name, user_name, email, password, prefecture, last_login_time)
+INSERT INTO users (display_name, user_name, email, password, prefecture, icon_url,  last_login_time)
 VALUES
-  ('山田太郎', 'yamada_taro', 'yamada@example.com', crypt('password123', gen_salt('bf')), 13, CURRENT_TIMESTAMP),
-  ('佐藤花子', 'sato_hanako', 'sato@example.com', crypt('securepass456', gen_salt('bf')), 27, CURRENT_TIMESTAMP - INTERVAL '1 day'),
-  ('鈴木一郎', 'suzuki_ichiro', 'suzuki@example.com', crypt('strongpw789', gen_salt('bf')), 40, CURRENT_TIMESTAMP - INTERVAL '2 days'),
-  ('田中美咲', 'tanaka_misaki', 'tanaka@example.com', crypt('safepassword321', gen_salt('bf')), 1, CURRENT_TIMESTAMP - INTERVAL '3 days'),
-  ('伊藤健太', 'ito_kenta', 'ito@example.com', crypt('securepw987', gen_salt('bf')), 23, CURRENT_TIMESTAMP - INTERVAL '4 days');
+  ('山田太郎', 'yamada_taro', 'yamada@example.com', crypt('password123', gen_salt('bf')), 13, 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Donald_Trump_official_portrait.jpg/250px-Donald_Trump_official_portrait.jpg' , CURRENT_TIMESTAMP),
+  ('佐藤花子', 'sato_hanako', 'sato@example.com', crypt('securepass456', gen_salt('bf')), 27, 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Donald_Trump_official_portrait.jpg/250px-Donald_Trump_official_portrait.jpg' , CURRENT_TIMESTAMP - INTERVAL '1 day'),
+  ('鈴木一郎', 'suzuki_ichiro', 'suzuki@example.com', crypt('strongpw789', gen_salt('bf')), 40, 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Donald_Trump_official_portrait.jpg/250px-Donald_Trump_official_portrait.jpg' , CURRENT_TIMESTAMP - INTERVAL '2 days'),
+  ('田中美咲', 'tanaka_misaki', 'tanaka@example.com', crypt('safepassword321', gen_salt('bf')), 1, 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Donald_Trump_official_portrait.jpg/250px-Donald_Trump_official_portrait.jpg' , CURRENT_TIMESTAMP - INTERVAL '3 days'),
+  ('伊藤健太', 'ito_kenta', 'ito@example.com', crypt('securepw987', gen_salt('bf')), 23, 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Donald_Trump_official_portrait.jpg/250px-Donald_Trump_official_portrait.jpg' , CURRENT_TIMESTAMP - INTERVAL '4 days');
 
 -- posts table
 INSERT INTO posts 
