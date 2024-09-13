@@ -31,6 +31,9 @@ public class UserEntity {
     @Column(name = "prefecture", nullable = false)
     private Short prefecture;
 
+    @Column(name = "icon_url")
+    private String iconUrl;
+
     // Getter & Setter for all fields
     public Long getId() {
         return id;
@@ -74,6 +77,10 @@ public class UserEntity {
 
     public Short getPrefecture() {
         return prefecture;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
     }
 
     public void setPrefecture(Short prefecture) {
