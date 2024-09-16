@@ -31,7 +31,7 @@ public class UserEntity {
     @Column(name = "prefecture", nullable = false)
     private Short prefecture;
 
-    @Column(name = "icon_url")
+    @Column(name = "icon_url" , nullable = true)
     private String iconUrl;
 
     // Getter & Setter for all fields
