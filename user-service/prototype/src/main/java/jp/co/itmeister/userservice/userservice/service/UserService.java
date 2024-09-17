@@ -1,5 +1,6 @@
 package jp.co.itmeister.userservice.userservice.service;
 
+import jp.co.itmeister.userservice.userservice.dto.SignupRequestDto;
 import jp.co.itmeister.userservice.userservice.dto.UserResponseDto;
 import jp.co.itmeister.userservice.userservice.entity.UserEntity;
 import jp.co.itmeister.userservice.userservice.repository.UserRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class UserService {
@@ -44,24 +46,42 @@ public class UserService {
 
     }
 
-    public UserResponseDto signupUser (UserEntity signupRequestUser) throws Exception {
-
-        //すでに登録済み user_name
-        if(userRepository.findByUserName(signupRequestUser.getUserName()).isPresent()) {
-            throw new IllegalArgumentException("This user name is already exists.");
-        }
-
+    public UserResponseDto signupUser (SignupRequestDto requestUser)  {
+        
         //すでに登録済み メアド
-        if(userRepository.findByEmail(signupRequestUser.getEmail()).isPresent()) {
+        if(userRepository.findByEmail(requestUser.getEmail()).isPresent()) {
             throw new IllegalArgumentException("This email is already exists.");
         }
 
-        //パスワードをハッシュ化
-        signupRequestUser.setPassword(passwordEncoder.encode(signupRequestUser.getPassword()));
-        UserEntity signupedUser = userRepository.save(signupRequestUser);
+        //ユーザネームをランダム生成
+        Short userNameLength = 12;
+        String userName = generateRandomString(userNameLength);
+        //重複チェック
+        while(userRepository.findByUserName(userName).isPresent()) {
+            userName = generateRandomString(userNameLength);
+        }
+
+        UserEntity newUser = new UserEntity();
+        newUser.setDisplayName(requestUser.getDisplayName());
+        newUser.setEmail(requestUser.getEmail());
+        newUser.setUserName(userName);
+        newUser.setPassword(passwordEncoder.encode(requestUser.getPassword()));
+        newUser.setPrefecture(requestUser.getPrefecture());
+
+        UserEntity signupedUser = userRepository.save(newUser);
         UserResponseDto response = new UserResponseDto(signupedUser);
 
         return response;
     }
 
+     private static String generateRandomString(final int length) {
+            String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            StringBuilder sb = new StringBuilder();
+            Random random = new Random();
+
+            for (int i = 0; i < length; i++) {
+                sb.append(chars.charAt(random.nextInt(chars.length())));
+            }
+            return sb.toString();
+        };
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import jp.co.itmeister.userservice.userservice.dto.SignupRequestDto;
 import jp.co.itmeister.userservice.userservice.dto.UserResponseDto;
 import jp.co.itmeister.userservice.userservice.entity.UserEntity;
 import jp.co.itmeister.userservice.userservice.responseBuilder.ResponseBuilder;
@@ -43,11 +44,11 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Map<String, Object>> signup(@Valid @RequestBody UserEntity signupRequest) {
+    public ResponseEntity<Map<String, Object>> signup(@Valid @RequestBody SignupRequestDto requestUser) {
         try {
-            UserResponseDto signedUpUser = userService.signupUser(signupRequest);
+            UserResponseDto signupedUser = userService.signupUser(requestUser);
             
-            return responseBuilder.buildSuccessResponse(signedUpUser);
+            return responseBuilder.buildSuccessResponse(signupedUser);
         } catch (IllegalArgumentException e) {
             return responseBuilder.buildErrorResponse(e.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {

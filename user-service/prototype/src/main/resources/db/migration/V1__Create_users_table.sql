@@ -5,7 +5,7 @@ CREATE TABLE users (
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     prefecture SMALLINT NOT NULL,
-    icon_url VARCHAR(512) NOT NULL,
+    icon_url VARCHAR(512),
     last_login_time TIMESTAMPTZ,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
