@@ -5,7 +5,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.List;
 
 @Entity
 @Table(name = "cities")
@@ -15,11 +19,15 @@ public class CityEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "prefecture_id", nullable = false)
-    private Integer prefectureId;
+    @ManyToOne
+    @JoinColumn(name = "prefecture_id", nullable = false)
+    private PrefectureEntity prefecture;
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @OneToMany(mappedBy = "city")
+    private List<PostEntity> posts;
 
     // Getters and Setters
     public Integer getId() {
@@ -30,12 +38,12 @@ public class CityEntity {
         this.id = id;
     }
 
-    public Integer getPrefectureId() {
-        return prefectureId;
+    public PrefectureEntity getPrefecture() {
+        return prefecture;
     }
 
-    public void setPrefectureId(Integer prefectureId) {
-        this.prefectureId = prefectureId;
+    public void setPrefecture(PrefectureEntity prefecture) {
+        this.prefecture = prefecture;
     }
 
     public String getName() {
@@ -44,5 +52,13 @@ public class CityEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<PostEntity> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<PostEntity> posts) {
+        this.posts = posts;
     }
 }
