@@ -11,6 +11,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "cities")
 public class CityEntity {
@@ -19,6 +22,7 @@ public class CityEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "prefecture_id", nullable = false)
     private PrefectureEntity prefecture;
@@ -26,6 +30,7 @@ public class CityEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "city")
     private List<PostEntity> posts;
 

@@ -9,6 +9,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "prefectures")
 public class PrefectureEntity {
@@ -19,6 +21,7 @@ public class PrefectureEntity {
     @Column(nullable = false , length = 64)
     private String name;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "prefecture")
     private List<CityEntity> cities;
 

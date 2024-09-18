@@ -4,6 +4,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import org.locationtech.jts.geom.Point;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.persistence.*;
@@ -33,6 +35,7 @@ public class PostEntity {
     @Column(name = "title", nullable = false, length = 128)
     private String title;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "city_id")
     private CityEntity city;
@@ -40,6 +43,7 @@ public class PostEntity {
     @Column(name = "description", length = 255)
     private String description;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "camera_id" , nullable = false)
     private CameraEntity camera;
