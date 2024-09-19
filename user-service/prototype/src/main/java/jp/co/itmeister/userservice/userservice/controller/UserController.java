@@ -46,6 +46,8 @@ public class UserController {
             return responseBuilder.buildSuccessResponse(editedUser);
         } catch (EntityNotFoundException e) {
             return responseBuilder.buildErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException e) {
+            return responseBuilder.buildErrorResponse(e.getMessage(), HttpStatus.CONFLICT);
         }
         catch (Exception e) {
             return responseBuilder.buildErrorResponse("User udpate falied.", HttpStatus.INTERNAL_SERVER_ERROR);

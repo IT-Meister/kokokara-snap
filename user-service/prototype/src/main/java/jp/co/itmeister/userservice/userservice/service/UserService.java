@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 import java.util.Random;
@@ -79,6 +79,7 @@ public class UserService {
         return response;
     }
 
+    @Transactional
     public UserResponseDto updateUser (Long id ,UserUpdateRequestDto requestUser) {
         //idチェック
         UserEntity user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found."));
@@ -89,10 +90,18 @@ public class UserService {
         }
 
         if(requestUser.getUserName() != null) {
+            //重複チェック
+            if(!user.getUserName().equals(requestUser.getUserName()) && userRepository.findByUserName(requestUser.getUserName()).isPresent()) {
+                throw new IllegalArgumentException("This user name is already exists.");
+            }
             user.setUserName(requestUser.getUserName());
         }
 
         if(requestUser.getEmail() != null) {
+            //重複チェック
+            if(!user.getEmail().equals(requestUser.getEmail()) && userRepository.findByEmail(requestUser.getEmail()).isPresent()) {
+                throw new IllegalArgumentException("This email is already exists.");
+            }
             user.setEmail(requestUser.getEmail());
         }
 
