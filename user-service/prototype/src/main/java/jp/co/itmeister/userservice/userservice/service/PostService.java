@@ -116,21 +116,7 @@ public class PostService {
             new Coordinate(post.getLongitude().doubleValue(), post.getLatitude().doubleValue())
         );
 
-        PostEntity newPost = new PostEntity();
-        newPost.setUid(UUID.randomUUID());
-        newPost.setUserId(post.getUserId());
-        newPost.setUrl(post.getUrl());
-        newPost.setTitle(post.getTitle());
-        newPost.setCity(city);
-        newPost.setDescription(post.getDescription());
-        newPost.setCamera(camera);
-        newPost.setLatlng(point);
-        newPost.setSnapTime(post.getSnapTime());
-        newPost.setAngle(post.getAngle());
-        newPost.setIso(post.getIso());
-        newPost.setFValue(post.getFValue());
-        newPost.setShutterSpeed(post.getShutterSpeed());
-
+        PostEntity newPost = convertToEntity(post, city, camera, point);
         PostEntity createdPost =  postRepository.save(newPost);
 
         PostDto response = convertToDto(createdPost);
@@ -167,4 +153,23 @@ public class PostService {
 
         return dto;
     }
-}
+
+    //Entity変換関数
+    private PostEntity convertToEntity(PostDto post, CityEntity city, CameraEntity camera, Point point) {
+        PostEntity newPost = new PostEntity();
+        newPost.setUid(UUID.randomUUID());
+        newPost.setUserId(post.getUserId());
+        newPost.setUrl(post.getUrl());
+        newPost.setTitle(post.getTitle());
+        newPost.setCity(city);
+        newPost.setDescription(post.getDescription());
+        newPost.setCamera(camera);
+        newPost.setLatlng(point);
+        newPost.setSnapTime(post.getSnapTime());
+        newPost.setAngle(post.getAngle());
+        newPost.setIso(post.getIso());
+        newPost.setFValue(post.getFValue());
+        newPost.setShutterSpeed(post.getShutterSpeed());
+        
+        return newPost;
+    }}
