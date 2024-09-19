@@ -5,36 +5,27 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 @Entity
-@Table(name = "cities")
-public class CityEntity {
-
+@Table(name = "cameras")
+public class CameraEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @JsonBackReference
-    @ManyToOne
-    @JoinColumn(name = "prefecture_id", nullable = false)
-    private PrefectureEntity prefecture;
+    @Column(nullable = false , length = 64)
+    private String brand;
 
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "city")
+    @OneToMany(mappedBy = "camera")
     private List<PostEntity> posts;
 
-    // Getters and Setters
+    //Getter & Setter
     public Integer getId() {
         return id;
     }
@@ -43,12 +34,12 @@ public class CityEntity {
         this.id = id;
     }
 
-    public PrefectureEntity getPrefecture() {
-        return prefecture;
+    public String getBrand() {
+        return brand;
     }
 
-    public void setPrefecture(PrefectureEntity prefecture) {
-        this.prefecture = prefecture;
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 
     public String getName() {
@@ -63,7 +54,7 @@ public class CityEntity {
         return posts;
     }
 
-    public void setPosts(List<PostEntity> posts) {
+    public void setPosts (List<PostEntity> posts) {
         this.posts = posts;
     }
 }

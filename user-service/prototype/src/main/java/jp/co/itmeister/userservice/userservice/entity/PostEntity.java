@@ -4,6 +4,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import org.locationtech.jts.geom.Point;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.persistence.*;
@@ -21,6 +23,7 @@ public class PostEntity {
     private Long id;
 
     // @Type(type = "org.hibernate.type.UUIDCharType")
+    @Column(name = "uid" , nullable = false , unique = true)
     private UUID uid;
 
     @Column(name = "user_id", nullable = false)
@@ -32,14 +35,18 @@ public class PostEntity {
     @Column(name = "title", nullable = false, length = 128)
     private String title;
 
-    @Column(name = "city_id")
-    private Integer cityId;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "city_id")
+    private CityEntity city;
 
     @Column(name = "description", length = 255)
     private String description;
 
-    @Column(name = "camera_id", nullable = false)
-    private Integer cameraId;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "camera_id" , nullable = false)
+    private CameraEntity camera;
 
     @JsonSerialize(using = PointSerializer.class)
     @Column(name = "latlng", nullable = false , columnDefinition =  "geography(Point,4326)")
@@ -110,12 +117,12 @@ public class PostEntity {
         this.title = title;
     }
 
-    public Integer getCityId() {
-        return cityId;
+    public CityEntity getCity() {
+        return city;
     }
 
-    public void setCityId(Integer cityId) {
-        this.cityId = cityId;
+    public void setCity(CityEntity city) {
+        this.city = city;
     }
 
     public String getDescription() {
@@ -126,12 +133,12 @@ public class PostEntity {
         this.description = description;
     }
 
-    public Integer getCameraId() {
-        return cameraId;
+    public CameraEntity getCamera() {
+        return camera;
     }
 
-    public void setCameraId(Integer cameraId) {
-        this.cameraId = cameraId;
+    public void setCamera(CameraEntity camera) {
+        this.camera = camera;
     }
 
     public Point getLatlng() {
