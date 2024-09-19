@@ -2,11 +2,16 @@ package jp.co.itmeister.userservice.userservice.service;
 
 import jp.co.itmeister.userservice.userservice.dto.SignupRequestDto;
 import jp.co.itmeister.userservice.userservice.dto.UserResponseDto;
+import jp.co.itmeister.userservice.userservice.dto.UserUpdateRequestDto;
 import jp.co.itmeister.userservice.userservice.entity.UserEntity;
 import jp.co.itmeister.userservice.userservice.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import jakarta.persistence.EntityNotFoundException;
+
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 import java.util.Random;
@@ -71,6 +76,40 @@ public class UserService {
         UserEntity signupedUser = userRepository.save(newUser);
         UserResponseDto response = new UserResponseDto(signupedUser);
 
+        return response;
+    }
+
+    public UserResponseDto updateUser (Long id ,UserUpdateRequestDto requestUser) {
+        //idチェック
+        UserEntity user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found."));
+
+        //ボディにあったらset
+        if(requestUser.getDisplayName() != null) {
+            user.setDisplayName(requestUser.getDisplayName());;
+        }
+
+        if(requestUser.getUserName() != null) {
+            user.setUserName(requestUser.getUserName());
+        }
+
+        if(requestUser.getEmail() != null) {
+            user.setEmail(requestUser.getEmail());
+        }
+
+        if(requestUser.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(requestUser.getPassword()));
+        }
+
+        if(requestUser.getPrefecture() != null) {
+            user.setPrefecture(requestUser.getPrefecture());
+        }
+
+        if(requestUser.getIconUrl() != null) {
+            user.setIconUrl(requestUser.getIconUrl());
+        }
+
+        UserEntity updatedUser = userRepository.save(user);
+        UserResponseDto response = new UserResponseDto(updatedUser);
         return response;
     }
 
