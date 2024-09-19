@@ -79,11 +79,17 @@ public class UserEntity {
         return prefecture;
     }
 
+    public void setPrefecture(Short prefecture) {
+        this.prefecture = prefecture;
+    }
+
     public String getIconUrl() {
         return iconUrl;
     }
 
-    public void setPrefecture(Short prefecture) {
-        this.prefecture = prefecture;
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
     }
+
+
 }
