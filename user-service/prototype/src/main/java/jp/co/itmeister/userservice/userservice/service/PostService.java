@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.UUID;
+import java.math.BigDecimal;
 
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -87,7 +88,7 @@ public class PostService {
 
     //post投稿
     @Transactional
-    public PostEntity createPost (PostDto post) {
+    public PostDto createPost (PostDto post) {
         //prefecture取得
         PrefectureEntity prefecture = prefectureRepository.findById(post.getPrefecture())
             .orElseThrow(() -> new EntityNotFoundException("Prefecture not found with id: " + post.getPrefecture()));
@@ -130,7 +131,11 @@ public class PostService {
         newPost.setFValue(post.getFValue());
         newPost.setShutterSpeed(post.getShutterSpeed());
 
-        return postRepository.save(newPost);
+        PostEntity createdPost =  postRepository.save(newPost);
+
+        PostDto response = convertToDto(createdPost);
+
+        return response;
     }
 
 
@@ -138,5 +143,28 @@ public class PostService {
     private List<PostEntity> findPostsWithLimit(int limit ) {
         Pageable pageable = PageRequest.of(0, limit, Sort.by("id").descending());
         return postRepository.findAll(pageable).getContent();
+    }
+
+    //dto変換関数
+    private PostDto convertToDto (PostEntity entity) {
+
+        PostDto dto = new PostDto();
+        dto.setUserId(entity.getUserId());
+        dto.setUrl(entity.getUrl());
+        dto.setTitle(entity.getTitle());
+        dto.setPrefecture(entity.getCity().getPrefecture().getId());
+        dto.setCityName(entity.getCity().getName());
+        dto.setDescription(entity.getDescription());
+        dto.setBrand(entity.getCamera().getBrand());
+        dto.setCameraName(entity.getCamera().getName());
+        dto.setLatitude(BigDecimal.valueOf(entity.getLatlng().getY()));
+        dto.setLongitude(BigDecimal.valueOf(entity.getLatlng().getX()));
+        dto.setSnapTime(entity.getSnapTime());
+        dto.setAngle(entity.getAngle());
+        dto.setIso(entity.getIso());
+        dto.setFValue(entity.getFValue());
+        dto.setShutterSpeed(entity.getShutterSpeed());
+
+        return dto;
     }
 }

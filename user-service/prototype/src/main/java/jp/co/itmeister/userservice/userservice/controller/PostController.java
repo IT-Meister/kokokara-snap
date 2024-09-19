@@ -63,7 +63,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<Map<String , Object>> createPost (@Valid @RequestBody PostDto requestPost) {
         try {
-            PostEntity createdPost = postService.createPost(requestPost);
+            PostDto createdPost = postService.createPost(requestPost);
             return responseBuilder.buildSuccessResponse(createdPost);
         } catch (EntityNotFoundException e) {
             return responseBuilder.buildErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND);

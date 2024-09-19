@@ -159,7 +159,7 @@ public class PostDto {
     public BigDecimal getFValue() {
         return fValue;
     }
-
+    @JsonProperty("f_value")
     public void setFValue(BigDecimal fValue) {
         this.fValue = fValue;
     }
