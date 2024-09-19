@@ -172,4 +172,5 @@ public class PostService {
         newPost.setShutterSpeed(post.getShutterSpeed());
         
         return newPost;
-    }}
+    }
+}
