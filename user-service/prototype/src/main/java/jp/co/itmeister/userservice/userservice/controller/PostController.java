@@ -8,6 +8,7 @@ import jp.co.itmeister.userservice.userservice.service.PostService;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,6 +70,16 @@ public class PostController {
             return responseBuilder.buildErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return responseBuilder.buildErrorResponse("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/map")
+    public ResponseEntity<Map<String , Object>> getNearbyPost (@PathVariable BigDecimal latitude , @PathVariable BigDecimal longitude , @PathVariable Integer zoom) {
+        try {
+            List<PostDto> posts = postService.getNearbyPost(latitude , longitude , zoom);
+            return responseBuilder.buildSuccessResponse(posts);
+        } catch (Exception e) {
+            return responseBuilder.buildErrorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
