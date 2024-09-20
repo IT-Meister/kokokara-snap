@@ -74,7 +74,7 @@ public class PostController {
     }
 
     @GetMapping("/map")
-    public ResponseEntity<Map<String , Object>> getNearbyPost (@PathVariable BigDecimal latitude , @PathVariable BigDecimal longitude , @PathVariable Integer zoom) {
+    public ResponseEntity<Map<String , Object>> getNearbyPost (@RequestParam BigDecimal latitude , @RequestParam BigDecimal longitude , @RequestParam Integer zoom) {
         try {
             List<PostDto> posts = postService.getNearbyPost(latitude , longitude , zoom);
             return responseBuilder.buildSuccessResponse(posts);
