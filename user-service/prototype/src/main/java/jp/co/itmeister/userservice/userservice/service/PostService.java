@@ -189,7 +189,7 @@ public class PostService {
     }
 
     private double calculateSearchRadius (Integer zoom) {
-        return 10.00;
+        return 1000.00;
     }
 
     private Integer calculatePostLimit (Integer zoom) {
