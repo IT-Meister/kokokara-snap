@@ -124,6 +124,20 @@ public class PostService {
         return response;
     }
 
+    public List<PostDto> getNearbyPost (BigDecimal latitude , BigDecimal longitude , Integer zoom) {
+
+        //mapのアップ度応じて件数を変えるため
+        Integer limit = calculatePostLimit(zoom);
+        //mapのアップ度応じて検索範囲を変えるため
+        double searchRadius = calculateSearchRadius(zoom);
+
+        List<PostEntity> nearbyPosts = postRepository.findNearbyPosts(latitude, longitude, searchRadius, limit);
+
+        List<PostDto> response = nearbyPosts.stream().map(this::convertToDto).collect(Collectors.toList());
+
+        return response;
+    }
+
 
     //件数制限をかける取得メソッド
     private List<PostEntity> findPostsWithLimit(int limit ) {
@@ -172,5 +186,16 @@ public class PostService {
         newPost.setShutterSpeed(post.getShutterSpeed());
         
         return newPost;
+    }
+
+    private double calculateSearchRadius (Integer zoom) {
+        return 10.00;
+    }
+
+    private Integer calculatePostLimit (Integer zoom) {
+        if(zoom <= 5) return 10;
+        if(zoom <= 10) return 20;
+        if(zoom <= 15) return 50;
+        else return 100;
     }
 }
