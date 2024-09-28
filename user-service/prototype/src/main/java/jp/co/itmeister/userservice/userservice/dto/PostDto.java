@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class PostDto {
+    private Long id;
     private Integer userId;
     private String url;
     private String title;
@@ -31,10 +32,11 @@ public class PostDto {
     public PostDto(){};
 
     // コンストラクタ
-    public PostDto ( Integer userId, String url, String title, Short prefecture, 
+    public PostDto ( Long id ,Integer userId, String url, String title, Short prefecture, 
                          String cityName, String description, String brand, String cameraName, 
                          BigDecimal latitude, BigDecimal longitude, ZonedDateTime snapTime, 
                          Integer angle, String iso, BigDecimal fValue, String shutterSpeed) {
+        this.id = id;
         this.userId = userId;
         this.url = url;
         this.title = title;
@@ -50,6 +52,13 @@ public class PostDto {
         this.iso = iso;
         this.fValue = fValue;
         this.shutterSpeed = shutterSpeed;
+    }
+    public Long getId () {
+        return id;
+    }
+
+    public void setId (Long id ) {
+        this.id = id;
     }
 
     public Integer getUserId() {
