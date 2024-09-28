@@ -113,7 +113,7 @@ public class PostService {
 
         //latlng
         Point point = geometryFactory.createPoint(
-            new Coordinate(post.getLongitude().doubleValue(), post.getLatitude().doubleValue())
+            new Coordinate(post.getLongitude(), post.getLatitude())
         );
 
         PostEntity newPost = convertToEntity(post, city, camera, point);
@@ -124,7 +124,7 @@ public class PostService {
         return response;
     }
 
-    public List<PostDto> getNearbyPost (BigDecimal latitude , BigDecimal longitude , Integer zoom) {
+    public List<PostDto> getNearbyPost (double latitude , double longitude , double zoom) {
 
         //mapのアップ度応じて件数を変えるため
         Integer limit = calculatePostLimit(zoom);
@@ -157,8 +157,8 @@ public class PostService {
         dto.setDescription(entity.getDescription());
         dto.setBrand(entity.getCamera().getBrand());
         dto.setCameraName(entity.getCamera().getName());
-        dto.setLatitude(BigDecimal.valueOf(entity.getLatlng().getY()));
-        dto.setLongitude(BigDecimal.valueOf(entity.getLatlng().getX()));
+        dto.setLatitude((entity.getLatlng().getY()));
+        dto.setLongitude((entity.getLatlng().getX()));
         dto.setSnapTime(entity.getSnapTime());
         dto.setAngle(entity.getAngle());
         dto.setIso(entity.getIso());
@@ -188,11 +188,11 @@ public class PostService {
         return newPost;
     }
 
-    private double calculateSearchRadius (Integer zoom) {
-        return 1000.00;
+    private double calculateSearchRadius (double zoom) {
+        return 10000000.00;
     }
 
-    private Integer calculatePostLimit (Integer zoom) {
+    private Integer calculatePostLimit (double zoom) {
         if(zoom <= 5) return 10;
         if(zoom <= 10) return 20;
         if(zoom <= 15) return 50;

@@ -8,7 +8,6 @@ import jp.co.itmeister.userservice.userservice.service.PostService;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -74,7 +73,7 @@ public class PostController {
     }
 
     @GetMapping("/map")
-    public ResponseEntity<Map<String , Object>> getNearbyPost (@RequestParam BigDecimal latitude , @RequestParam BigDecimal longitude , @RequestParam Integer zoom) {
+    public ResponseEntity<Map<String , Object>> getNearbyPost (@RequestParam double latitude , @RequestParam double longitude , @RequestParam double zoom) {
         try {
             List<PostDto> posts = postService.getNearbyPost(latitude , longitude , zoom);
             return responseBuilder.buildSuccessResponse(posts);
