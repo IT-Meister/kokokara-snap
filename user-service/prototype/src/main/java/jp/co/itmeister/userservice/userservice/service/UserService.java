@@ -29,13 +29,15 @@ public class UserService {
     }
 
 
-    public Optional<UserEntity> showUser(Long id)  {
+    public Optional<UserResponseDto> showUser(Long id)  {
 
-        return userRepository.findById(id);
+       return  userRepository.findById(id).map(this::convertToDto);
+        
     }
 
-    public UserEntity createUser(UserEntity user) {
-        return userRepository.save(user);
+    public UserResponseDto createUser(UserEntity user) {
+        UserEntity savedUser = userRepository.save(user);
+        return convertToDto(savedUser);
     }
 
    public UserResponseDto authenticateUser(String email, String password) {
@@ -119,6 +121,10 @@ public class UserService {
         UserEntity updatedUser = userRepository.save(user);
         UserResponseDto response = new UserResponseDto(updatedUser);
         return response;
+    }
+
+    private UserResponseDto convertToDto (UserEntity user) {
+        return new UserResponseDto(user);
     }
 
      private static String generateRandomString(final int length) {
