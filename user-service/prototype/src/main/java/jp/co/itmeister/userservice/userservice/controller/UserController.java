@@ -9,7 +9,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import jp.co.itmeister.userservice.userservice.dto.UserResponseDto;
 import jp.co.itmeister.userservice.userservice.dto.UserUpdateRequestDto;
-import jp.co.itmeister.userservice.userservice.entity.UserEntity;
 import jp.co.itmeister.userservice.userservice.responseBuilder.ResponseBuilder;
 import jp.co.itmeister.userservice.userservice.service.UserService;
 
@@ -30,7 +29,7 @@ public class UserController {
 
     @GetMapping("/{user_id}")
     public ResponseEntity<Map<String , Object>> showUser(@PathVariable("user_id") Long id) {
-        Optional<UserEntity> userOptional = userService.showUser(id);
+        Optional<UserResponseDto> userOptional = userService.showUser(id);
 
         if(userOptional.isPresent()) {
             return responseBuilder.buildSuccessResponse(userOptional.get());
