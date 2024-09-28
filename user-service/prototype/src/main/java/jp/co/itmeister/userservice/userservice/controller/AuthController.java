@@ -31,7 +31,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authLogin(@Valid @RequestBody UserEntity user) {
+    public ResponseEntity<Map<String , Object>> authLogin(@Valid @RequestBody UserEntity user) {
         try {
             UserResponseDto userResponseDto = userService.authenticateUser(user.getEmail(), user.getPassword());
             return responseBuilder.buildSuccessResponse(userResponseDto);

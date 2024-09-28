@@ -52,18 +52,20 @@ public class PostService {
     }
 
     //全件取得 (Max MAX_POSTS件)
-    public List<PostEntity> findRecentPosts() {
-        return findPostsWithLimit(MAX_POSTS);
+    public List<PostDto> findRecentPosts() {
+        List<PostEntity> recentPosts =  findPostsWithLimit(MAX_POSTS);
+        return recentPosts.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
     //都道府県でフィルター、MAX_POSTS件未満のときはid小さいものを補完する
-    public List<PostEntity> findByPrefecture(Short prefectureId) {
+    public List<PostDto> findByPrefecture(Short prefectureId) {
         List<CityEntity> cities = cityRepository.findByPrefectureId(prefectureId);
         List<PostEntity> posts = new ArrayList<>();
 
         //都道府県で不一致
         if(cities.isEmpty()) {
-            return findPostsWithLimit(MAX_POSTS);
+            List<PostEntity> recentPosts =  findPostsWithLimit(MAX_POSTS);
+            return recentPosts.stream().map(this::convertToDto).collect(Collectors.toList());
         }
 
         //取得したcity_id
@@ -79,11 +81,11 @@ public class PostService {
             posts.addAll(additionalPosts);
         }
 
-        return posts;
+        return posts.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
-    public Optional<PostEntity> showPost (Long id) {
-        return postRepository.findById(id);
+    public Optional<PostDto> showPost (Long id) {
+        return postRepository.findById(id).map(this::convertToDto);
     }    
 
     //post投稿
@@ -149,6 +151,7 @@ public class PostService {
     private PostDto convertToDto (PostEntity entity) {
 
         PostDto dto = new PostDto();
+        dto.setId(entity.getId());
         dto.setUserId(entity.getUserId());
         dto.setUrl(entity.getUrl());
         dto.setTitle(entity.getTitle());

@@ -1,7 +1,6 @@
 package jp.co.itmeister.userservice.userservice.controller;
 
 import jp.co.itmeister.userservice.userservice.dto.PostDto;
-import jp.co.itmeister.userservice.userservice.entity.PostEntity;
 import jp.co.itmeister.userservice.userservice.responseBuilder.ResponseBuilder;
 import jp.co.itmeister.userservice.userservice.service.PostService;
 
@@ -38,7 +37,7 @@ public class PostController {
 
     @GetMapping("/home")
     public ResponseEntity<Map<String , Object>> indexPost(@RequestParam(value = "prefecture", required = false) Short prefecture) {
-        List<PostEntity> posts;
+        List<PostDto> posts;
         if (prefecture != null) {
             // 都道府県指定あり
             posts = postService.findByPrefecture(prefecture);
@@ -51,7 +50,7 @@ public class PostController {
 
     @GetMapping("/{post_id}")
     public ResponseEntity<Map<String, Object>> showPost(@PathVariable("post_id") Long id) {
-            Optional<PostEntity> post = postService.showPost(id);
+            Optional<PostDto> post = postService.showPost(id);
 
             if(post.isPresent()){
                 return responseBuilder.buildSuccessResponse(post.get());
