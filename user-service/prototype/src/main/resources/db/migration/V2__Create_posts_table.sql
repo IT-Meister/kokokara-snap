@@ -14,7 +14,7 @@ CREATE TABLE posts (
     camera_id INTEGER NOT NULL,
     latlng GEOGRAPHY(Point, 4326) NOT NULL,
     snap_time TIMESTAMPTZ, 
-    angle INTEGER,
+    angle double precision,
     iso VARCHAR(32),
     f_value NUMERIC(5, 2),
     shutter_speed VARCHAR(32),
