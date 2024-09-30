@@ -56,7 +56,7 @@ public class PostEntity {
     private ZonedDateTime snapTime;
 
     @Column(name = "angle")
-    private double angle;
+    private float angle;
 
     @Column(name = "iso", length = 32)
     private String iso;
@@ -157,11 +157,11 @@ public class PostEntity {
         this.snapTime = snapTime;
     }
 
-    public double getAngle() {
+    public float getAngle() {
         return angle;
     }
 
-    public void setAngle(double angle) {
+    public void setAngle(float angle) {
         this.angle = angle;
     }
 

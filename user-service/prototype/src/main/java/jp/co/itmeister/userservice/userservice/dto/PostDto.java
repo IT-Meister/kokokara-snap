@@ -22,7 +22,7 @@ public class PostDto {
     private double latitude;
     private double longitude;
     private ZonedDateTime snapTime;
-    private double angle;
+    private float angle;
     private String iso;
 
     @JsonProperty("f_value")
@@ -35,7 +35,7 @@ public class PostDto {
     public PostDto ( Long id ,Integer userId, String url, String title, Short prefecture, 
                          String cityName, String description, String brand, String cameraName, 
                          double latitude, double longitude, ZonedDateTime snapTime, 
-                         double angle, String iso, BigDecimal fValue, String shutterSpeed) {
+                         float angle, String iso, BigDecimal fValue, String shutterSpeed) {
         this.id = id;
         this.userId = userId;
         this.url = url;
@@ -149,11 +149,11 @@ public class PostDto {
         this.snapTime = snapTime;
     }
 
-    public double getAngle() {
+    public float getAngle() {
         return angle;
     }
 
-    public void setAngle(double angle) {
+    public void setAngle(float angle) {
         this.angle = angle;
     }
 
