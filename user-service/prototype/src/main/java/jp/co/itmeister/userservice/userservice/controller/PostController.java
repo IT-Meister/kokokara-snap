@@ -70,4 +70,14 @@ public class PostController {
             return responseBuilder.buildErrorResponse("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/map")
+    public ResponseEntity<Map<String , Object>> getNearbyPost (@RequestParam double NElatitude , @RequestParam double NElongitude , @RequestParam double SWlatitude , @RequestParam double SWlongitude , @RequestParam double zoom) {
+        try {
+            List<PostDto> posts = postService.getNearbyPost(NElatitude , NElongitude , NElongitude , SWlongitude , zoom);
+            return responseBuilder.buildSuccessResponse(posts);
+        } catch (Exception e) {
+            return responseBuilder.buildErrorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

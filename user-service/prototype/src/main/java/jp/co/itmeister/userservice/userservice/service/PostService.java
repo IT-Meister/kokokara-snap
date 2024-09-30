@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.UUID;
-import java.math.BigDecimal;
 
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -115,13 +114,33 @@ public class PostService {
 
         //latlng
         Point point = geometryFactory.createPoint(
-            new Coordinate(post.getLongitude().doubleValue(), post.getLatitude().doubleValue())
+            new Coordinate(post.getLongitude(), post.getLatitude())
         );
 
         PostEntity newPost = convertToEntity(post, city, camera, point);
         PostEntity createdPost =  postRepository.save(newPost);
 
         PostDto response = convertToDto(createdPost);
+
+        return response;
+    }
+
+    public List<PostDto> getNearbyPost ( double NElatitude ,  double NElongitude ,  double SWlatitude ,  double SWlongitude , double zoom) {
+
+        //mapのアップ度応じて件数を変えるため
+        Integer limit = calculatePostLimit(zoom);
+
+        double northLat = Math.max(NElatitude, SWlatitude);
+        double southLat = Math.min(NElatitude, SWlatitude);
+        double eastLon = Math.max(NElongitude, SWlongitude);
+        double westLon = Math.min(NElongitude, SWlongitude);
+
+        double centerLat = (northLat + southLat) / 2;
+        double centerLon = (eastLon + westLon) / 2;
+
+        List<PostEntity> nearbyPosts = postRepository.findNearbyPosts(northLat , southLat , eastLon , westLon , centerLat , centerLon , limit);
+
+        List<PostDto> response = nearbyPosts.stream().map(this::convertToDto).collect(Collectors.toList());
 
         return response;
     }
@@ -146,8 +165,8 @@ public class PostService {
         dto.setDescription(entity.getDescription());
         dto.setBrand(entity.getCamera().getBrand());
         dto.setCameraName(entity.getCamera().getName());
-        dto.setLatitude(BigDecimal.valueOf(entity.getLatlng().getY()));
-        dto.setLongitude(BigDecimal.valueOf(entity.getLatlng().getX()));
+        dto.setLatitude((entity.getLatlng().getY()));
+        dto.setLongitude((entity.getLatlng().getX()));
         dto.setSnapTime(entity.getSnapTime());
         dto.setAngle(entity.getAngle());
         dto.setIso(entity.getIso());
@@ -176,4 +195,9 @@ public class PostService {
         
         return newPost;
     }
-}
+
+
+private int calculatePostLimit(double zoom) {
+    if(zoom >= 16) {return 10;}
+    else return 20;
+}}

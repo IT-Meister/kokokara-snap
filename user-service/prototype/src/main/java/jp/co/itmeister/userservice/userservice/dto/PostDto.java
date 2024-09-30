@@ -19,10 +19,10 @@ public class PostDto {
     private String description;
     private String brand;
     private String cameraName;
-    private BigDecimal latitude;
-    private BigDecimal longitude;
+    private double latitude;
+    private double longitude;
     private ZonedDateTime snapTime;
-    private Integer angle;
+    private float angle;
     private String iso;
 
     @JsonProperty("f_value")
@@ -34,8 +34,8 @@ public class PostDto {
     // コンストラクタ
     public PostDto ( Long id ,Integer userId, String url, String title, Short prefecture, 
                          String cityName, String description, String brand, String cameraName, 
-                         BigDecimal latitude, BigDecimal longitude, ZonedDateTime snapTime, 
-                         Integer angle, String iso, BigDecimal fValue, String shutterSpeed) {
+                         double latitude, double longitude, ZonedDateTime snapTime, 
+                         float angle, String iso, BigDecimal fValue, String shutterSpeed) {
         this.id = id;
         this.userId = userId;
         this.url = url;
@@ -125,19 +125,19 @@ public class PostDto {
         this.cameraName = cameraName;
     }
 
-    public BigDecimal getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(BigDecimal latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public BigDecimal getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(BigDecimal longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
@@ -149,11 +149,11 @@ public class PostDto {
         this.snapTime = snapTime;
     }
 
-    public Integer getAngle() {
+    public float getAngle() {
         return angle;
     }
 
-    public void setAngle(Integer angle) {
+    public void setAngle(float angle) {
         this.angle = angle;
     }
 
