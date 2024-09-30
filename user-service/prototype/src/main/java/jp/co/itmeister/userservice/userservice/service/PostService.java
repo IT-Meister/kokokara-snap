@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.UUID;
-import java.math.BigDecimal;
 
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -126,14 +125,20 @@ public class PostService {
         return response;
     }
 
-    public List<PostDto> getNearbyPost (double latitude , double longitude , double zoom) {
+    public List<PostDto> getNearbyPost ( double NElatitude ,  double NElongitude ,  double SWlatitude ,  double SWlongitude , double zoom) {
 
         //mapのアップ度応じて件数を変えるため
         Integer limit = calculatePostLimit(zoom);
-        //mapのアップ度応じて検索範囲を変えるため
-        double searchRadius = calculateSearchRadius(zoom);
 
-        List<PostEntity> nearbyPosts = postRepository.findNearbyPosts(latitude, longitude, searchRadius, limit);
+        double northLat = Math.max(NElatitude, SWlatitude);
+        double southLat = Math.min(NElatitude, SWlatitude);
+        double eastLon = Math.max(NElongitude, SWlongitude);
+        double westLon = Math.min(NElongitude, SWlongitude);
+
+        double centerLat = (northLat + southLat) / 2;
+        double centerLon = (eastLon + westLon) / 2;
+
+        List<PostEntity> nearbyPosts = postRepository.findNearbyPosts(northLat , southLat , eastLon , westLon , centerLat , centerLon , limit);
 
         List<PostDto> response = nearbyPosts.stream().map(this::convertToDto).collect(Collectors.toList());
 
@@ -191,14 +196,8 @@ public class PostService {
         return newPost;
     }
 
-    private double calculateSearchRadius (double zoom) {
-        return 10000000.00;
-    }
 
-    private Integer calculatePostLimit (double zoom) {
-        if(zoom <= 5) return 10;
-        if(zoom <= 10) return 20;
-        if(zoom <= 15) return 50;
-        else return 100;
-    }
-}
+private int calculatePostLimit(double zoom) {
+    if(zoom >= 16) {return 10;}
+    else return 20;
+}}
