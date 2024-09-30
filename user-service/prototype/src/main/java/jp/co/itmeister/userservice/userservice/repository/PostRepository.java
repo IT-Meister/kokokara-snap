@@ -16,14 +16,20 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
 
     List<PostEntity> findByIdNotIn(List<Long> ids , Pageable pageable);
 
-   @Query(value = "SELECT p FROM PostEntity p " +
-                   "WHERE function('ST_DWithin', p.latlng, " +
-                   "function('ST_SetSRID', function('ST_MakePoint', :longitude, :latitude), 4326), :radius) = true " +
-                   "ORDER BY function('ST_Distance', p.latlng, " +
-                   "function('ST_SetSRID', function('ST_MakePoint', :longitude, :latitude), 4326))" +
-                   "LIMIT :limit")
-    List<PostEntity> findNearbyPosts(@Param("latitude") double latitude,
-                                     @Param("longitude") double longitude,
-                                     @Param("radius") double searchRadius,
-                                     @Param("limit") Integer limit);
+@Query(value = "SELECT p FROM PostEntity p " +
+               "WHERE function('ST_Within', " +
+               "function('ST_GeomFromWKB', p.latlng), " +
+               "function('ST_SetSRID', function('ST_MakeEnvelope', :westLon, :southLat, :eastLon, :northLat), 4326)) = true " +
+               "ORDER BY function('ST_Distance', " +
+               "function('ST_GeomFromWKB', p.latlng), " +
+               "function('ST_SetSRID', function('ST_MakePoint', :centerLon, :centerLat), 4326)) " +
+               "LIMIT :limit")
+        List<PostEntity> findNearbyPosts(        
+        @Param("northLat") double northLat,
+        @Param("southLat") double southLat,
+        @Param("eastLon") double eastLon,
+        @Param("westLon") double westLon,
+        @Param("centerLat") double centerLat,
+        @Param("centerLon") double centerLon,
+        @Param("limit") int limit);
 }
