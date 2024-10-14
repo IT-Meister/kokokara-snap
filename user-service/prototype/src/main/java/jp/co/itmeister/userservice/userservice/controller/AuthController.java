@@ -1,8 +1,10 @@
 package jp.co.itmeister.userservice.userservice.controller;
 
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -38,10 +40,14 @@ public class AuthController {
     public ResponseEntity<Map<String , Object>> authLogin(@Valid @RequestBody UserEntity user) {
         try {
             UserResponseDto userResponseDto = userService.authenticateUser(user.getEmail(), user.getPassword());
+            ResponseCookie newCookie = jwtUtils.generateJwtCookie(userResponseDto.getUserName());
 
-            ResponseCookie newCookie = jwtUtils.generateJwtCookie(user.getEmail());
+            Map<String, Object> responseBody = new LinkedHashMap<>();
+            responseBody.put("status" , "Success");
+            responseBody.put("data" , userResponseDto);
 
-            return responseBuilder.buildSuccessResponse(userResponseDto , newCookie);
+            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, newCookie.toString()).body(responseBody);
+            
         } catch (IllegalArgumentException e) {
             return responseBuilder.buildErrorResponse("Email or password is incorrect.", HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
@@ -55,7 +61,7 @@ public class AuthController {
         try {
             UserResponseDto signupedUser = userService.signupUser(requestUser);
             
-            return responseBuilder.buildSuccessResponse(signupedUser , null);
+            return responseBuilder.buildSuccessResponse(signupedUser);
         } catch (IllegalArgumentException e) {
             return responseBuilder.buildErrorResponse(e.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {

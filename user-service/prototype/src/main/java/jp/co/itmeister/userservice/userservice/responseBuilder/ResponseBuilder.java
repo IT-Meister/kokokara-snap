@@ -1,8 +1,6 @@
 package jp.co.itmeister.userservice.userservice.responseBuilder;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -13,17 +11,12 @@ import java.util.LinkedHashMap;
 public class ResponseBuilder {
     
     //成功レスポンス
-    public <T> ResponseEntity<Map<String , Object>> buildSuccessResponse (T data , ResponseCookie cookies) {
+    public <T> ResponseEntity<Map<String , Object>> buildSuccessResponse (T data ) {
         Map<String , Object> responseBody = new LinkedHashMap<>();
         responseBody.put("status" , "Success");
         responseBody.put("data" , data);
 
-        ResponseEntity.BodyBuilder responseBuilder =  ResponseEntity.ok();
-
-        if(cookies != null) {
-            responseBuilder.header(HttpHeaders.SET_COOKIE, cookies.toString());
-        }
-        return responseBuilder.body(responseBody);
+        return new ResponseEntity<>(responseBody , HttpStatus.OK);
     }
 
     //エラーレスポンス
