@@ -5,7 +5,8 @@ import jp.co.itmeister.userservice.userservice.entity.UserEntity;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)public class UserResponseDto {
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class UserResponseDto {
     
     private Long id;
     private String userName;

@@ -41,10 +41,9 @@ public class UserService {
     }
 
    public UserResponseDto authenticateUser(String email, String password) {
-        // ユーザーをメールアドレスで検索
+
         UserEntity user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException());
 
-            // パスワードを比較（ハッシュ化されたパスワードと入力されたパスワード）
             if (!passwordEncoder.matches(password, user.getPassword())) {
                 throw new IllegalArgumentException();
             }
