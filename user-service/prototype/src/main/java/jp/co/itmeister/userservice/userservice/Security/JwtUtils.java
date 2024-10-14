@@ -5,11 +5,15 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.WebUtils;
 
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import javax.crypto.SecretKey;
+
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
 
@@ -26,26 +30,50 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
     }
 
-    public ResponseCookie generateJwtCookie (String email) {
-        String jwt = generateTokenFromEmail(email);
+    public ResponseCookie generateJwtCookie (String username) {
+        String jwt = generateTokenFromUserName(username);
         ResponseCookie cookie = ResponseCookie.from(jwtCookieName, jwt).path("/api").maxAge(24 * 60 * 60).httpOnly(true).secure(true).sameSite("Strict").build();
         return cookie;
     }
 
-    // public boolean validateJwtToken (HttpServletRequest request) {
+    public boolean validateJwtToken (String authToken) {
+        try {
+            Jwts.parser().verifyWith(key()).build().parseSignedClaims(authToken);
 
-    // }
+            return true;
+          
+        } catch (JwtException e) {
+            return false;
+        }
+    }
 
-private String generateTokenFromEmail(String email) {
+    private String generateTokenFromUserName(String username) {
     return Jwts.builder()
-        .subject(email)
+        .subject(username)
         .issuedAt(new Date())
         .expiration(new Date(System.currentTimeMillis() + jwtExpirationSeconds))
         .signWith(key())
         .compact();
-}
+    }
 
-    // private String getTokenFromCookie (HttpServletRequest request) {
+    public String getUserNameFromToken(String token) {
+        try {
+            return Jwts.parser().verifyWith(key()).build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .getSubject();
+        } catch (JwtException e) {
+            return null;
+        }
+    }
 
-    // }
+    public String getTokenFromCookie (HttpServletRequest request) {
+        Cookie cookie = WebUtils.getCookie(request, jwtCookieName);
+
+        if(cookie != null) {
+            return cookie.getValue();
+        } else {
+            return null;
+        }
+    }
 }
