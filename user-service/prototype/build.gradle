@@ -26,6 +26,8 @@ dependencies {
     implementation 'org.hibernate:hibernate-spatial:6.1.6.Final'
     implementation 'org.locationtech.jts:jts-core:1.18.2'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation(platform("software.amazon.awssdk:bom:2.28.22"))
+    implementation("software.amazon.awssdk:s3")
 }
 
 tasks.named('test') {
