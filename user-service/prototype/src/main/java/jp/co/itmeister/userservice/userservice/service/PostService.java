@@ -120,13 +120,14 @@ public class PostService {
             new Coordinate(post.getLongitude(), post.getLatitude())
         );
 
+        UUID postUid = UUID.randomUUID();
+        String imagePath = s3Service.uploadFile(file, postUid , "posts");
+
         PostEntity newPost = convertToEntity(post, city, camera, point);
-        PostEntity createdPost =  postRepository.save(newPost);
+        newPost.setUrl(imagePath);
+        newPost.setUid(postUid);
 
-        String imagePath = s3Service.uploadFile(file, createdPost.getUid() , "posts");
-        createdPost.setUrl(imagePath);
-
-        PostEntity updatedPost = postRepository.save(createdPost);
+        PostEntity updatedPost = postRepository.save(newPost);
         PostDto response = convertToDto(updatedPost);
 
         return response;

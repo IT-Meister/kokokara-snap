@@ -1,5 +1,6 @@
 package jp.co.itmeister.userservice.userservice.controller;
 
+import jp.co.itmeister.userservice.userservice.dto.CreatePostDto;
 import jp.co.itmeister.userservice.userservice.dto.PostDto;
 import jp.co.itmeister.userservice.userservice.responseBuilder.ResponseBuilder;
 import jp.co.itmeister.userservice.userservice.service.PostService;
@@ -72,7 +73,7 @@ public class PostController {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
             objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-            PostDto postData = objectMapper.readValue(postDataJson, PostDto.class);
+            CreatePostDto postData = objectMapper.readValue(postDataJson, CreatePostDto.class);
             
             PostDto createdPost = postService.createPost(postData, file);
             return responseBuilder.buildSuccessResponse(createdPost);
