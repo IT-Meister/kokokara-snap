@@ -1,9 +1,12 @@
 package jp.co.itmeister.userservice.userservice.controller;
 
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +19,7 @@ import jp.co.itmeister.userservice.userservice.dto.UserResponseDto;
 import jp.co.itmeister.userservice.userservice.entity.UserEntity;
 import jp.co.itmeister.userservice.userservice.responseBuilder.ResponseBuilder;
 import jp.co.itmeister.userservice.userservice.service.UserService;
+import jp.co.itmeister.userservice.userservice.Security.JwtUtils;
 
 
 @RestController
@@ -23,22 +27,31 @@ import jp.co.itmeister.userservice.userservice.service.UserService;
 public class AuthController {
     private final UserService  userService;
     private final ResponseBuilder responseBuilder;
+    private final JwtUtils jwtUtils;
 
     @Autowired
-    public AuthController (UserService userService , ResponseBuilder responseBuilder) {
+    public AuthController (UserService userService , ResponseBuilder responseBuilder , JwtUtils jwtUtils) {
         this.userService = userService;
         this.responseBuilder = responseBuilder;
+        this.jwtUtils = jwtUtils;
     }
 
     @PostMapping("/login")
     public ResponseEntity<Map<String , Object>> authLogin(@Valid @RequestBody UserEntity user) {
         try {
             UserResponseDto userResponseDto = userService.authenticateUser(user.getEmail(), user.getPassword());
-            return responseBuilder.buildSuccessResponse(userResponseDto);
+            ResponseCookie newCookie = jwtUtils.generateJwtCookie(userResponseDto.getUserName());
+
+            Map<String, Object> responseBody = new LinkedHashMap<>();
+            responseBody.put("status" , "Success");
+            responseBody.put("data" , userResponseDto);
+
+            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, newCookie.toString()).body(responseBody);
+            
         } catch (IllegalArgumentException e) {
             return responseBuilder.buildErrorResponse("Email or password is incorrect.", HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
-            return responseBuilder.buildErrorResponse("Authentication failed.", HttpStatus.INTERNAL_SERVER_ERROR);
+            return responseBuilder.buildErrorResponse("Authentication failed." + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }

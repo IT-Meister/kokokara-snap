@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 public class ResponseBuilder {
     
     //成功レスポンス
-    public <T> ResponseEntity<Map<String , Object>> buildSuccessResponse (T data) {
+    public <T> ResponseEntity<Map<String , Object>> buildSuccessResponse (T data ) {
         Map<String , Object> responseBody = new LinkedHashMap<>();
         responseBody.put("status" , "Success");
         responseBody.put("data" , data);
