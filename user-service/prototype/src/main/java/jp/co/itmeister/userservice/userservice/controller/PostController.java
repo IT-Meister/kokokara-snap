@@ -66,7 +66,7 @@ public class PostController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Object>> createPost(
         @RequestPart(value = "file") MultipartFile file,
-        @RequestPart(value = "postData") String postDataJson
+        @RequestPart(value = "post_data") String postDataJson
     ) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
