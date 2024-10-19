@@ -27,10 +27,10 @@ public class S3Service {
         this.s3Client = s3Client;
     }
 
-    public String uploadFile (MultipartFile file , UUID uid) throws Exception {
+    public String uploadFile (MultipartFile file , UUID uid , String prefix) throws Exception {
         String contentType = file.getContentType();
         String extension = getFileExtension(contentType);
-        String url = String.format("posts/%s.%s", uid , extension);
+        String url = String.format("%s/%s.%s", prefix , uid , extension);
 
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder().bucket(bucketName).key(url).contentType(contentType).build();

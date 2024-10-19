@@ -123,7 +123,7 @@ public class PostService {
         PostEntity newPost = convertToEntity(post, city, camera, point);
         PostEntity createdPost =  postRepository.save(newPost);
 
-        String imagePath = s3Service.uploadFile(file, createdPost.getUid());
+        String imagePath = s3Service.uploadFile(file, createdPost.getUid() , "posts");
         createdPost.setUrl(imagePath);
 
         PostEntity updatedPost = postRepository.save(createdPost);
