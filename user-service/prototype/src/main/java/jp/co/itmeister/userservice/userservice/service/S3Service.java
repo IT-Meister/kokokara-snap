@@ -1,7 +1,9 @@
 package jp.co.itmeister.userservice.userservice.service;
 
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -9,6 +11,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 
+@Service
 public class S3Service {
     
     private final S3Client s3Client;
@@ -24,10 +27,10 @@ public class S3Service {
         this.s3Client = s3Client;
     }
 
-    public String uploadFile (MultipartFile file , Long postId) throws Exception {
+    public String uploadFile (MultipartFile file , UUID uid) throws Exception {
         String contentType = file.getContentType();
         String extension = getFileExtension(contentType);
-        String url = String.format("posts/%s.%s", postId , extension);
+        String url = String.format("posts/%s.%s", uid , extension);
 
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder().bucket(bucketName).key(url).contentType(contentType).build();
@@ -40,7 +43,7 @@ public class S3Service {
     }
 
     public String getFullFileUrl (String key) {
-        return "https://" + cloudfrontDomain + "/" + key;
+        return cloudfrontDomain + "/" + key;
     }
 
     private String getFileExtension (String contentType) {

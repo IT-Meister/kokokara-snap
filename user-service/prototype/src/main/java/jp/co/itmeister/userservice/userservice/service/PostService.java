@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -38,16 +39,18 @@ public class PostService {
     private final CameraRepository cameraRepository;
     private final PrefectureRepository prefectureRepository;
     private final GeometryFactory geometryFactory;
+    private final S3Service s3Service;
 
     private static final int MAX_POSTS = 60;
 
     @Autowired
-    public PostService(PostRepository postRepository, CityRepository cityRepository, CameraRepository cameraRepository, PrefectureRepository prefectureRepository) {
+    public PostService(PostRepository postRepository, CityRepository cityRepository, CameraRepository cameraRepository, PrefectureRepository prefectureRepository , S3Service s3Service) {
         this.postRepository = postRepository;
         this.cityRepository = cityRepository;
         this.cameraRepository = cameraRepository;
         this.prefectureRepository = prefectureRepository;
         this.geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
+        this.s3Service = s3Service;
     }
 
     //全件取得 (Max MAX_POSTS件)
@@ -89,7 +92,7 @@ public class PostService {
 
     //post投稿
     @Transactional
-    public PostDto createPost (PostDto post) {
+    public PostDto createPost (PostDto post , MultipartFile file) throws Exception {
         //prefecture取得
         PrefectureEntity prefecture = prefectureRepository.findById(post.getPrefecture())
             .orElseThrow(() -> new EntityNotFoundException("Prefecture not found with id: " + post.getPrefecture()));
@@ -120,7 +123,11 @@ public class PostService {
         PostEntity newPost = convertToEntity(post, city, camera, point);
         PostEntity createdPost =  postRepository.save(newPost);
 
-        PostDto response = convertToDto(createdPost);
+        String imagePath = s3Service.uploadFile(file, createdPost.getUid());
+        createdPost.setUrl(imagePath);
+
+        PostEntity updatedPost = postRepository.save(createdPost);
+        PostDto response = convertToDto(updatedPost);
 
         return response;
     }
@@ -158,7 +165,8 @@ public class PostService {
         PostDto dto = new PostDto();
         dto.setId(entity.getId());
         dto.setUserId(entity.getUserId());
-        dto.setUrl(entity.getUrl());
+        //  cloudfrontのフルパスに変換する
+        dto.setUrl(s3Service.getFullFileUrl(entity.getUrl()));
         dto.setTitle(entity.getTitle());
         dto.setPrefecture(entity.getCity().getPrefecture().getId());
         dto.setCityName(entity.getCity().getName());
