@@ -2,6 +2,7 @@ package jp.co.itmeister.userservice.userservice.dto;
 
 import java.time.ZonedDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -21,6 +22,7 @@ public class PostDto {
     private String cameraName;
     private double latitude;
     private double longitude;
+    @JsonFormat(shape = JsonFormat.Shape.STRING , pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     private ZonedDateTime snapTime;
     private float angle;
     private String iso;

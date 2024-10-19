@@ -1,5 +1,6 @@
 package jp.co.itmeister.userservice.userservice.controller;
 
+import jp.co.itmeister.userservice.userservice.dto.CreatePostDto;
 import jp.co.itmeister.userservice.userservice.dto.PostDto;
 import jp.co.itmeister.userservice.userservice.responseBuilder.ResponseBuilder;
 import jp.co.itmeister.userservice.userservice.service.PostService;
@@ -10,17 +11,21 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 
 @RestController
 @RequestMapping("/api/v1/post")
@@ -59,13 +64,19 @@ public class PostController {
             }
     }
 
-    @PostMapping
-    public ResponseEntity<Map<String , Object>> createPost (@Valid @RequestBody PostDto requestPost) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Map<String, Object>> createPost(
+        @RequestPart(value = "file") MultipartFile file,
+        @RequestPart(value = "post_data") String postDataJson
+    ) {
         try {
-            PostDto createdPost = postService.createPost(requestPost);
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+            CreatePostDto postData = objectMapper.readValue(postDataJson, CreatePostDto.class);
+            
+            PostDto createdPost = postService.createPost(postData, file);
             return responseBuilder.buildSuccessResponse(createdPost);
-        } catch (EntityNotFoundException e) {
-            return responseBuilder.buildErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return responseBuilder.buildErrorResponse("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

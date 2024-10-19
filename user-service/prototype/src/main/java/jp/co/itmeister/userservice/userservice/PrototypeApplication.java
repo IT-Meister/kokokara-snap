@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 import java.util.TimeZone;
 
 
@@ -18,6 +20,13 @@ import java.util.TimeZone;
 @RestController
 public class PrototypeApplication {
 	public static void main(String[] args) {
+        Dotenv dotenv = Dotenv.load();
+        System.setProperty("AWS_ACCESS_KEY_ID", dotenv.get("AWS_ACCESS_KEY_ID"));
+        System.setProperty("AWS_SECRET_ACCESS_KEY", dotenv.get("AWS_SECRET_ACCESS_KEY"));
+        System.setProperty("S3_BUCKET_NAME", dotenv.get("S3_BUCKET_NAME"));
+        System.setProperty("AWS_REGION", dotenv.get("AWS_REGION"));
+        System.setProperty("AWS_CLOUDFRONT_DOMAIN", dotenv.get("AWS_CLOUDFRONT_DOMAIN"));
+
 		SpringApplication.run(PrototypeApplication.class, args);
 	}
 

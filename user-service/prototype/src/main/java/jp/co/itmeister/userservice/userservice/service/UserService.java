@@ -8,6 +8,7 @@ import jp.co.itmeister.userservice.userservice.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -15,17 +16,20 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final S3Service s3Service;
 
     @Autowired
-    public UserService(UserRepository userRepository , PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository , PasswordEncoder passwordEncoder , S3Service s3Service) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.s3Service = s3Service;
     }
 
 
@@ -48,7 +52,7 @@ public class UserService {
                 throw new IllegalArgumentException();
             }
 
-            return new UserResponseDto(user);
+            return convertToDto(user);
 
     }
 
@@ -75,13 +79,12 @@ public class UserService {
         newUser.setPrefecture(requestUser.getPrefecture());
 
         UserEntity signupedUser = userRepository.save(newUser);
-        UserResponseDto response = new UserResponseDto(signupedUser);
 
-        return response;
+        return convertToDto(signupedUser);
     }
 
     @Transactional
-    public UserResponseDto updateUser (Long id ,UserUpdateRequestDto requestUser) {
+    public UserResponseDto updateUser (Long id ,UserUpdateRequestDto requestUser , MultipartFile file) throws Exception {
 
         UserEntity user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found."));
 
@@ -113,17 +116,26 @@ public class UserService {
             user.setPrefecture(requestUser.getPrefecture());
         }
 
-        if(requestUser.getIconUrl() != null) {
-            user.setIconUrl(requestUser.getIconUrl());
+        if(file != null && !file.isEmpty()) {
+            String iconUrl = s3Service.uploadFile(file, UUID.randomUUID(), "profile");
+            user.setIconUrl(iconUrl);
         }
 
         UserEntity updatedUser = userRepository.save(user);
-        UserResponseDto response = new UserResponseDto(updatedUser);
-        return response;
+        return convertToDto(updatedUser);
     }
 
     private UserResponseDto convertToDto (UserEntity user) {
-        return new UserResponseDto(user);
+        UserResponseDto dto = new UserResponseDto();
+        dto.setId(user.getId());
+        dto.setUserName(user.getUserName());
+        dto.setDisplayName(user.getDisplayName());
+        dto.setEmail(user.getEmail());
+        dto.setPrefecture(user.getPrefecture());
+        //cloudfrontのフルパスにする
+        dto.setIconUrl(s3Service.getFullFileUrl(user.getIconUrl()));
+
+        return dto;
     }
 
      private static String generateRandomString(final int length) {
